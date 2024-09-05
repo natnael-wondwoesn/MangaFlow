@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
           'alt': element['attributes']['alt']
           
         });
-        print(mangaList);
+        // print(mangaList);
       });
       setState(() {
         isLoaded = true;
@@ -42,17 +42,39 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('MangaFlow'),
       ),
-      body: isLoaded ? ListView.builder(
+      body: isLoaded ? GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 4.0,
+          mainAxisSpacing: 4.0,
+        ),
         itemCount: mangaList.length,
         itemBuilder: (context, index){
-          return ListTile(
-            title: Text(mangaList[index]['alt']),
-            leading: Image.network(mangaList[index]['src']),
-          );
+          return MangaCard(
+            mangaList[index]['alt'], 
+            mangaList[index]['src'])
+            ;
         },
       ) : Center(
         child: CircularProgressIndicator(),
       ),
     );
   }
+}
+
+Widget MangaCard (String title, String imageUrl){
+  return Container(
+    width: 120,
+    height: 187,
+    child: Column(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Image.network(
+            fit: BoxFit.cover,
+            imageUrl)),
+        if (title.length > 20) Text(title.substring(0, 20) + '...' )else Text(title), 
+      ],
+    ),
+  );
 }
